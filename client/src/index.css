@@ -1,0 +1,16 @@
+.colorBtn {
+    background-color: #21b9f5;
+    color: white;
+    border-color: #0d6efd;
+    border-radius: 5px;
+    padding: 5px 10px; /* Ajustar el padding según sea necesario */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 3px;
+    cursor: pointer;
+    vertical-align: middle; /* Alineación vertical */
+    line-height: 1.5; /* Ajuste de la altura de línea */
+    width: 120px; /* Ajuste de ancho */
+}
