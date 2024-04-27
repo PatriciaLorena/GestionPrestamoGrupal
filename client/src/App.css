@@ -1,0 +1,13 @@
+.small-form {
+  width: 300px;
+  margin: 6px;
+}
+.new-btn {
+  margin: 0 auto;
+  display: block;
+}
+.align-center {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+}
