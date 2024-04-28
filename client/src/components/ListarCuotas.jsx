@@ -36,6 +36,14 @@ const ListarCuotas = ({
   );
   const cuotasEnCreacion = prestamoEnCreacion ? prestamoEnCreacion.cuotas : [];
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0'); 
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+};
+
   return (
     <>
       <div className="mt-4">
@@ -55,7 +63,7 @@ const ListarCuotas = ({
             {cuotasEnCreacion.map((cuota, index) => (
               <tr key={index}>
                 <td>{cuota.numCuotas}</td>
-                <td>{cuota.fechaVencimiento}</td>
+                <td>{formatDate(cuota.fechaVencimiento)}</td>
                 <td>{cuota.montoCuota}</td>
                 <td>{cuota.mora}</td>
                 <td>{cuota.diasMora}</td>
@@ -68,31 +76,35 @@ const ListarCuotas = ({
         {prestamoEnCreacion && (
           <>
             {componenteLlamador === "crearPrestamo" ? (
-              <Link to="/prestamos" className="btn btn-primary m-3 px-5">
-                Guardar
-              </Link>
-            ) : (
               <>
-                <PagoCuota
-                  agregarNuevaCuota={agregarNuevaCuota}
-                  numerosCuotas={cuotasEnCreacion.map(
-                    (cuota) => cuota.numCuotas
-                  )}
-                />
-                <button className="btn btn-primary m-3 px-5">Cobrar</button>
-              </>
-            )}
-            <button className="btn btn-danger px-5">Cancelar</button>
-          </>
-        )}
-      </div>
-      <b>Total a pagar: </b>$
+              <b>Total a pagar: </b>$
       {prestamoEnCreacion
         ? prestamoEnCreacion.cuotas.reduce(
             (acc, cuota) => acc + cuota.montoCuota,
             0
           )
-        : 0}
+        : 0}<br></br>
+              
+              <Link to="/prestamos" className="btn btn-primary m-3 px-5">
+                Guardar
+              </Link>
+              </>
+            ) : (
+              <>
+                <PagoCuota
+                  agregarNuevaCuota={agregarNuevaCuota}
+                  cuotasEnCreacion={cuotasEnCreacion}
+                />
+                <button className="btn btn-primary m-3 px-5">Cobrar</button>
+              </>
+            )}
+            <Link to="/prestamos" className="btn btn-danger m-3 px-5">
+                Cancelar
+              </Link>
+          </>
+        )}
+      </div>
+      
     </>
   );
 };
