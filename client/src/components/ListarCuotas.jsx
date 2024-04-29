@@ -3,6 +3,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import PagoCuota from "./PagoCuota";
+import SendCorreo from "./SendCorreo";
 
 const ListarCuotas = ({
   prestamos,
@@ -38,11 +39,11 @@ const ListarCuotas = ({
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0'); 
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
-};
+  };
 
   return (
     <>
@@ -77,17 +78,17 @@ const ListarCuotas = ({
           <>
             {componenteLlamador === "crearPrestamo" ? (
               <>
-              <b>Total a pagar: </b>$
-      {prestamoEnCreacion
-        ? prestamoEnCreacion.cuotas.reduce(
-            (acc, cuota) => acc + cuota.montoCuota,
-            0
-          )
-        : 0}<br></br>
-              
-              <Link to="/prestamos" className="btn btn-primary m-3 px-5">
-                Guardar
-              </Link>
+                <b>Total a pagar: </b>$
+                {prestamoEnCreacion
+                  ? prestamoEnCreacion.cuotas.reduce(
+                      (acc, cuota) => acc + cuota.montoCuota,
+                      0
+                    )
+                  : 0}
+                <br></br>
+                <Link to="/prestamos" className="btn btn-primary m-3 px-5">
+                  Guardar
+                </Link>
               </>
             ) : (
               <>
@@ -99,12 +100,18 @@ const ListarCuotas = ({
               </>
             )}
             <Link to="/prestamos" className="btn btn-danger m-3 px-5">
-                Cancelar
-              </Link>
+              Cancelar
+            </Link>
           </>
         )}
       </div>
-      
+      <SendCorreo
+        fechaVencimiento={
+          cuotasEnCreacion.length > 0
+            ? cuotasEnCreacion[0].fechaVencimiento
+            : null
+        }
+      />
     </>
   );
 };
