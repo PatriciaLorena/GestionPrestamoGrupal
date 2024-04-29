@@ -23,6 +23,9 @@ app.use("/api/prestamo", PrestamoRouter);
 const UserRouter = require("./routes/user.routes");
 app.use("/api/auth", UserRouter);
 
+const EmailRouter = require("./routes/email.routes");
+app.use("/api/enviar-correo", EmailRouter);
+
 app.listen(port, () =>
   console.log(`Listening on port: ${port} (http://localhost:${port}/)`)
 );
