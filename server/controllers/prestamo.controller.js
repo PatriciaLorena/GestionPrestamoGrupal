@@ -22,8 +22,8 @@ module.exports = {
             cuotas: []
         });
 
-        const montoTotalConIntereses = monto * (1 + interes / 100); 
-        const montoCuota = montoTotalConIntereses / numCuotas; 
+        const montoTotalConIntereses = monto * (1 + interes / 100);
+        const montoCuota = Math.round(montoTotalConIntereses / numCuotas); 
 
         function calcularFechaVencimiento(fechaPrestamo, numCuota) {
             const fecha = new Date(fechaPrestamo);
