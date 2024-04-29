@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
     const [cuotasPagar, setCuotasPagar] = useState([]);
@@ -13,28 +14,32 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
 
         if (cuotaEncontrada) {
             const total = cuotaEncontrada.montoCuota + cuotaEncontrada.mora;
-        const cuotaConTotal = { ...cuotaEncontrada, total };
-        setCuotasPagar(prevCuotas => [...prevCuotas, cuotaConTotal]);
-        vaciarinput();
-            
+            const cuotaConTotal = { ...cuotaEncontrada, total };
+            setCuotasPagar(prevCuotas => [...prevCuotas, cuotaConTotal]);
+            vaciarinput();
+
             //agregarNuevaCuota([cuotaEncontrada]); 
         } else {
-           
+
             console.log('Cuota no encontrada');
         }
     };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, '0'); 
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
         return `${day}-${month}-${year}`;
     };
 
     const totalAPagar = cuotasPagar.reduce((total, cuota) => total + cuota.total, 0);
 
-    
+    const totalCuotas = cuotasPagar.reduce((total, cuota) => total + cuota.montoCuota, 0);
+
+    const totalMora = cuotasPagar.reduce((total, cuota) => total + cuota.mora, 0);
+
+
 
     return (
         <div>
@@ -69,7 +74,13 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
                     ))}
                 </tbody>
             </table>
-            <p>Total a pagar: ${totalAPagar}</p>
+            <div className='text-center mt-3' style={{ display: 'inline-block' }}>
+                <p style={{ display: 'inline-block', marginRight: '20px' }}><b>Total de cuotas: </b>${totalCuotas}</p>
+                <p style={{ display: 'inline-block', marginRight: '20px' }}><b>Total de mora:</b> ${totalMora}</p>
+                <p style={{ display: 'inline-block' }}><b>Total a pagar: </b>${totalAPagar}</p>
+                <button className="btn btn-primary m-3 px-5">Cobrar</button>
+                <Link to="/prestamos" className="btn btn-danger m-3 px-5">Cancelar</Link>
+            </div>
         </div>
     );
 };

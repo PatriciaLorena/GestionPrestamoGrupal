@@ -22,8 +22,9 @@ module.exports = {
             cuotas: []
         });
 
-        const montoTotalConIntereses = monto * (1 + interes / 100); 
-        const montoCuota = montoTotalConIntereses / numCuotas; 
+        const montoTotalConIntereses = monto * (1 + interes / 100);
+        const montoCuota = Math.round(montoTotalConIntereses / numCuotas);
+
 
         function calcularFechaVencimiento(fechaPrestamo, numCuota) {
             const fecha = new Date(fechaPrestamo);
@@ -34,7 +35,7 @@ module.exports = {
         function calcularMora(fechaVencimiento) {
             const hoy = new Date();
             const diasMora = Math.max(0, Math.floor((hoy - fechaVencimiento) / (1000 * 60 * 60 * 24)));
-            const mora = diasMora * 3000; 
+            const mora = diasMora * 3000;
             return { diasMora, mora };
         }
 
@@ -66,7 +67,7 @@ module.exports = {
     },
 
     updateOnePrestamoById: (req, res) => {
-        PrestamoModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true})
+        PrestamoModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
             .then((updatedPrestamo) => res.status(200).json({ prestamo: updatedPrestamo }))
             .catch((err) =>
                 res.status(400).json({ message: "something went wrong", error: err })

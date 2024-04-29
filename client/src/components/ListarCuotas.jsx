@@ -88,21 +88,29 @@ const ListarCuotas = ({
               <Link to="/prestamos" className="btn btn-primary m-3 px-5">
                 Guardar
               </Link>
+              <Link to="/prestamos" className="btn btn-danger m-3 px-5">
+                Cancelar
+              </Link>
               </>
-            ) : (
+            ) 
+            : (
               <>
+              
                 <PagoCuota
                   agregarNuevaCuota={agregarNuevaCuota}
                   cuotasEnCreacion={cuotasEnCreacion}
                 />
-                <button className="btn btn-primary m-3 px-5">Cobrar</button>
+            
               </>
             )}
-            <Link to="/prestamos" className="btn btn-danger m-3 px-5">
-                Cancelar
-              </Link>
+
+
+            
+              
           </>
+          
         )}
+        
       </div>
       
     </>
