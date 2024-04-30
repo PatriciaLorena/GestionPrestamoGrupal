@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Menu from "./components/Menu";
 
 function ListarCrearClientes() {
   const navigate = useNavigate();
@@ -34,32 +35,35 @@ function ListarCrearClientes() {
     }
   };
   return (
-    <div className="row">
-      <div className="row align-items-center">
-        <div className="col-auto">
-          <h1>Listado de clientes</h1>
+    <>
+      <Menu />
+      <div className="row">
+        <div className="row align-items-center">
+          <div className="col-auto">
+            <h1>Listado de clientes</h1>
+          </div>
+          <div className="col-auto ms-auto">
+            <Link
+              to={`/cliente/create`}
+              className="btn btn-primary btn-sm me-1 botonAdd estBtn"
+            >
+              Agregar nuevo cliente
+            </Link>
+          </div>
+          <div className="col-auto ms-auto">
+            {" "}
+            <button
+              onClick={handleLogout}
+              className="btn btn-primary btn-sm me-1 botonAdd estBtn"
+            >
+              Log out
+            </button>
+            <div>{error}</div>
+          </div>
         </div>
-        <div className="col-auto ms-auto">
-          <Link
-            to={`/cliente/create`}
-            className="btn btn-primary btn-sm me-1 botonAdd estBtn"
-          >
-            Agregar nuevo cliente
-          </Link>
-        </div>
-        <div className="col-auto ms-auto">
-          {" "}
-          <button
-            onClick={handleLogout}
-            className="btn btn-primary btn-sm me-1 botonAdd estBtn"
-          >
-            Log out
-          </button>
-          <div>{error}</div>
-        </div>
+        <ListarClientes clientes={clientes} setClientes={setClientes} />
       </div>
-      <ListarClientes clientes={clientes} setClientes={setClientes} />
-    </div>
+    </>
   );
 }
 

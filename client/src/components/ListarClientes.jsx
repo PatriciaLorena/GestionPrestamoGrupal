@@ -66,48 +66,50 @@ const ListarClientes = ({ clientes, setClientes }) => {
   }
 
   return (
-    <table className="table table-Light table-striped miborde">
-      <thead className="table-secondary">
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Nº de cedula</th>
-          <th>Telefóno</th>
-          <th>Email</th>
-          <th>Dirección</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {clientes.map((cliente) => (
-          <tr key={cliente._id}>
-            <td>{cliente.name}</td>
-            <td>{cliente.lastName}</td>
-            <td>{cliente.numCedula}</td>
-            <td>{cliente.telefono}</td>
-            <td>{cliente.email}</td>
-            <td>{cliente.direccion}</td>
-            <td>
-              <Link to={`/prestamos`} className="colorBtn">
-                Ver Prestamos
-              </Link>
-              <Link
-                to={`/cliente/${cliente._id}/update`}
-                className="btn btn-success btn-sm me-1"
-              >
-                Editar
-              </Link>
-              <button
-                onClick={() => deleteCliente(cliente._id)}
-                className="btn btn-danger btn-sm"
-              >
-                Eliminar
-              </button>
-            </td>
+    <>
+      <table className="table table-Light table-striped miborde">
+        <thead className="table-secondary">
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Nº de cedula</th>
+            <th>Telefóno</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {clientes.map((cliente) => (
+            <tr key={cliente._id}>
+              <td>{cliente.name}</td>
+              <td>{cliente.lastName}</td>
+              <td>{cliente.numCedula}</td>
+              <td>{cliente.telefono}</td>
+              <td>{cliente.email}</td>
+              <td>{cliente.direccion}</td>
+              <td>
+                <Link to={`/prestamos`} className="colorBtn">
+                  Ver Prestamos
+                </Link>
+                <Link
+                  to={`/cliente/${cliente._id}/update`}
+                  className="btn btn-success btn-sm me-1"
+                >
+                  Editar
+                </Link>
+                <button
+                  onClick={() => deleteCliente(cliente._id)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
 

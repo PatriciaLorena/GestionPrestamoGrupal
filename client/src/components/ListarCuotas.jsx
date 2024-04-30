@@ -96,10 +96,8 @@ const ListarCuotas = ({
                   agregarNuevaCuota={agregarNuevaCuota}
                   cuotasEnCreacion={cuotasEnCreacion}
                 />
-                
               </>
             )}
-            
           </>
         )}
       </div>
