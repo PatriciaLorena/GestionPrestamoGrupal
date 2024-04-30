@@ -8,6 +8,7 @@ import ListarCrearPrestamo from "./src/ListarCrearPrestamo";
 import CobrarPrestamo from "./src/components/CobrarPrestamo";
 import LoginForm from "./src/components/LoginForm";
 import RegistroForm from "./src/components/RegistroForm";
+import Inicio from "./src/components/Inicio";
 const App = () => {
   const [clientes, setCLientes] = useState([]);
 
@@ -29,11 +30,12 @@ const App = () => {
             />
           }
         />
+
+        <Route path="/inicio" element={<Inicio />} />
         <Route path="/cliente/create" element={<CrearCliente />} />
         <Route path="/prestamo/:id/cobrar" element={<CobrarPrestamo />} />
         <Route path="/prestamos" element={<VerPrestamos />} />
         <Route path="/cliente/:id/update" element={<ClienteFormUpdate />} />
-
         <Route path="/prestamo/create" element={<ListarCrearPrestamo />} />
       </Routes>
     </div>

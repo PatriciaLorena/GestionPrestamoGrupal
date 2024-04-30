@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Menu from "./src/components/Menu";
 
 const VerPrestamos = () => {
   const [prestamos, setPrestamos] = useState([]);
@@ -53,6 +54,7 @@ const VerPrestamos = () => {
 
   return (
     <>
+      <Menu />
       <div className="row align-items-center">
         <div className="col-auto">
           <h1>Listado de prestamos</h1>
