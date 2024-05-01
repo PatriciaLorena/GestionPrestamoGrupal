@@ -6,6 +6,7 @@ import PagoCuota from "./PagoCuota";
 import SendCorreo from "./SendCorreo";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { useParams } from "react-router-dom";
 
 const ListarCuotas = ({
   prestamos,
@@ -16,7 +17,7 @@ const ListarCuotas = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [clientes, setClientes] = useState([]);
-
+  const { id } = useParams();
 
   useEffect(() => {
     axios
