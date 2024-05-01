@@ -80,5 +80,38 @@ module.exports = {
                 res.status(400).json({ message: "something went wrong", error: err })
             );
     },
+
+    pagarCuota: (req, res) => {
+        const { prestamoId, cuotaId } = req.params;
+        
+        PrestamoModel.findById(prestamoId)
+            .then(prestamo => {
+                if (!prestamo) {
+                    return res.status(404).json({ message: "Préstamo no encontrado" });
+                }
+    
+                // Buscar la cuota dentro del arreglo de cuotas
+                const cuota = prestamo.cuotas.find(c => c.numCuotas.toString() === cuotaId);
+                if (!cuota) {
+                    return res.status(404).json({ message: "Cuota no encontrada" });
+                }
+    
+                // Cambiar el estado de la cuota a "pagado"
+                cuota.estado = "pagado";
+    
+                // Guardar el préstamo actualizado
+                return prestamo.save();
+            })
+            .then(savedPrestamo => {
+                // Devolver el préstamo actualizado
+                res.json(savedPrestamo);
+            })
+            .catch(error => {
+                console.error("Error al pagar cuota:", error);
+                res.status(500).json({ message: "Error interno del servidor" });
+            });
+    }
+    
+    
 };
 

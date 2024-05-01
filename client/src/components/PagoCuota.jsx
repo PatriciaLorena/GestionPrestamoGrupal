@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
   const [cuotasPagar, setCuotasPagar] = useState([]);
   const [numeroCuota, setNumeroCuota] = useState("");
+  const [prestamo, setPrestamo] = useState(null);
+  const [cuotas, setCuotas] = useState([]);
+  const { id } = useParams();
+  console.log({id});
 
   const vaciarinput = () => {
     setNumeroCuota("");
@@ -18,13 +24,46 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
       const total = cuotaEncontrada.montoCuota + cuotaEncontrada.mora;
       const cuotaConTotal = { ...cuotaEncontrada, total };
       setCuotasPagar((prevCuotas) => [...prevCuotas, cuotaConTotal]);
-      vaciarinput();
+      
 
       //agregarNuevaCuota([cuotaEncontrada]);
     } else {
       console.log("Cuota no encontrada");
     }
   };
+
+  const handleCobrarCuota = async () => {
+    try {
+      const cuotaPagada = cuotasEnCreacion.find(cuota => cuota.numCuotas === parseInt(numeroCuota));
+      if (!cuotaPagada) {
+        console.error('Cuota no encontrada');
+        return;
+      }
+  
+      const response = await axios.put(`http://localhost:80/api/prestamo/${id}/cuotas/${cuotaPagada.numCuotas}/pagar`);
+      
+      // Verifica si la solicitud fue exitosa (código de estado 200)
+      if (response.status === 200) {
+        // Actualiza el estado del componente con los datos actualizados del préstamo
+        const prestamoActualizado = response.data.prestamo;
+        // Aquí debes actualizar el estado de tu componente con los datos del préstamo actualizado
+        // Por ejemplo:
+        setPrestamo(prestamoActualizado);
+        Swal.fire({
+          icon: 'success',
+          title: 'Cobrado!',
+          text: 'La cuota fue cobrada exitosamente',
+        })
+      } else {
+        console.error('Hubo un problema al pagar la cuota');
+      }
+    } catch (error) {
+      console.error('Error al cobrar la cuota:', error);
+    }
+    
+  };
+  
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -45,6 +84,8 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
   );
 
   const totalMora = cuotasPagar.reduce((total, cuota) => total + cuota.mora, 0);
+
+
 
   return (
     <>
@@ -95,7 +136,7 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
           <p style={{ display: "inline-block" }}>
             <b>Total a pagar: </b>${totalAPagar}
           </p>
-          <button className="btn btn-primary m-3 px-5">Cobrar</button>
+        <Link to={`/prestamo/${id}/cobrar`} className="btn btn-primary m-3 px-5" onClick={handleCobrarCuota}>Cobrar cuota</Link>
           <Link to="/prestamos" className="btn btn-danger m-3 px-5">
             Cancelar
           </Link>
