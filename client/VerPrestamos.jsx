@@ -147,7 +147,7 @@ const VerPrestamos = () => {
                 >
                   Cobrar
                 </Link>
-                <Link to={`/prestamo/${prestamo._id}/cuotas`}>Detalle</Link>
+                <Link className="btn btn-success btn-sm me-1" to={`/prestamo/${prestamo._id}/cuotas`}>Detalle</Link>
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => deletePrestamo(prestamo._id)}
