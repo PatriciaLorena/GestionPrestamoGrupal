@@ -1,18 +1,67 @@
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
+import { Link } from "react-router-dom";
 
 const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
   const [cuotasPagar, setCuotasPagar] = useState([]);
   const [numeroCuota, setNumeroCuota] = useState("");
-  const [prestamo, setPrestamo] = useState(null);
-  const [cuotas, setCuotas] = useState([]);
+  const [cuotas, setCuotas] = useState([]); 
   const { id } = useParams();
-  console.log({id});
+
+  useEffect(() => {
+    const fetchCuotas = async () => {
+      try {
+        const response = await axios.get(`http://localhost:80/api/prestamo/${id}`);
+        setCuotas(response.data);
+      } catch (error) {
+        console.error('Error al obtener las cuotas:', error);
+      }
+    };
+
+    fetchCuotas();
+  }, [id]);
 
   const vaciarinput = () => {
     setNumeroCuota("");
+  };
+
+  const generarInformePDF = () => {
+    const doc = new jsPDF();
+  
+    // Agregar título al documento
+    doc.setFontSize(18);
+    doc.text("Informe de Cuotas", 10, 15);
+  
+    // Agregar tabla con los datos de las cuotas
+    let posY = 25;
+    const colNames = ["Número de Cuota", "Fecha de Vencimiento", "Monto de Cuota", "Mora", "Días de Mora"];
+    const rows = cuotasPagar.map((cuota, index)=> [
+      index + 1,
+      cuota.numCuotas,
+      formatDate(cuota.fechaVencimiento),
+      cuota.montoCuota,
+      cuota.mora,
+      cuota.diasMora
+    ]);
+  
+    doc.autoTable({
+      startY: posY,
+      head: [colNames],
+      body: rows
+    });
+
+    // Obtener la URL del archivo PDF generado
+  const pdfUrl = doc.output("bloburl");
+
+  // Abrir la URL en una nueva pestaña del navegador
+  window.open(pdfUrl, "_blank");
+  
+    // Guardar el documento
+    doc.save("Informe_Cuotas.pdf");
   };
 
   const handleAgregarCuotas = () => {
@@ -24,9 +73,6 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
       const total = cuotaEncontrada.montoCuota + cuotaEncontrada.mora;
       const cuotaConTotal = { ...cuotaEncontrada, total };
       setCuotasPagar((prevCuotas) => [...prevCuotas, cuotaConTotal]);
-      
-
-      //agregarNuevaCuota([cuotaEncontrada]);
     } else {
       console.log("Cuota no encontrada");
     }
@@ -48,7 +94,7 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
         const prestamoActualizado = response.data.prestamo;
         // Aquí debes actualizar el estado de tu componente con los datos del préstamo actualizado
         // Por ejemplo:
-        setPrestamo(prestamoActualizado);
+        setCuotas(prestamoActualizado); // Corregido a setCuotas
         Swal.fire({
           icon: 'success',
           title: 'Cobrado!',
@@ -60,10 +106,7 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
     } catch (error) {
       console.error('Error al cobrar la cuota:', error);
     }
-    
   };
-  
-  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -85,11 +128,9 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
 
   const totalMora = cuotasPagar.reduce((total, cuota) => total + cuota.mora, 0);
 
-
-
   return (
     <>
-      <div>
+      <div className="container mt-4">
         <input
           type="number"
           placeholder="cuota"
@@ -136,10 +177,8 @@ const PagoCuota = ({ agregarNuevaCuota, cuotasEnCreacion }) => {
           <p style={{ display: "inline-block" }}>
             <b>Total a pagar: </b>${totalAPagar}
           </p>
-        <Link to={`/prestamo/${id}/cobrar`} className="btn btn-primary m-3 px-5" onClick={handleCobrarCuota}>Cobrar cuota</Link>
-          <Link to="/prestamos" className="btn btn-danger m-3 px-5">
-            Cancelar
-          </Link>
+          <button className="btn btn-primary m-3 px-5" onClick={handleCobrarCuota}>Cobrar cuota</button>
+          <Link to="/prestamos"><button className="btn btn-danger m-3 px-5">Candelar</button></Link>
         </div>
       </div>
     </>
