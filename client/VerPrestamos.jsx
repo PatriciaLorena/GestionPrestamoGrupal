@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Menu from "./src/components/Menu";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 const VerPrestamos = () => {
   const [prestamos, setPrestamos] = useState([]);
@@ -41,6 +43,38 @@ const VerPrestamos = () => {
           });
       }
     });
+  };
+
+  // Función para generar el informe PDF
+  const generarInformePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Informe de Préstamos", 10, 10);
+
+    const rows = [];
+    prestamos.forEach((prestamo) => {
+      const row = [
+        prestamo.cliente ? prestamo.cliente.name : "Sin nombre",
+        prestamo.cliente ? prestamo.cliente.lastName : "Sin apellido",
+        prestamo.monto,
+        prestamo.numCuotas,
+        prestamo.cuotas.length > 0
+          ? prestamo.cuotas[prestamo.cuotas.length - 1].fechaVencimiento
+          : "Sin fecha",
+        prestamo.cuotas.length > 0
+          ? prestamo.cuotas[prestamo.cuotas.length - 1].estado
+          : "Sin estado",
+      ];
+      rows.push(row);
+    });
+
+    doc.autoTable({
+      head: [
+        ["Nombre", "Apellido", "Monto", "Cuotas", "Fecha de vencimiento", "Estado"]
+      ],
+      body: rows,
+    });
+
+    doc.save("Informe_Prestamos.pdf");
   };
 
   useEffect(() => {
@@ -118,10 +152,11 @@ const VerPrestamos = () => {
           ))}
         </tbody>
       </table>
+      <button className="btn btn-primary" onClick={generarInformePDF}>
+        Generar Informe PDF
+      </button>
     </>
   );
 };
-
-VerPrestamos.propTypes = {};
 
 export default VerPrestamos;

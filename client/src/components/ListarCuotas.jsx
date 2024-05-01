@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import PagoCuota from "./PagoCuota";
 import SendCorreo from "./SendCorreo";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 const ListarCuotas = ({
   prestamos,
@@ -45,11 +47,25 @@ const ListarCuotas = ({
     return `${day}-${month}-${year}`;
   };
 
+  const generarInformePDF = () => {
+    const doc = new jsPDF();
+    
+    doc.text("Informe de Cuotas", 10, 10);
+    doc.autoTable({ html: "#tablaCuotas" });
+    //doc.save("Informe_Cuotas.pdf");
+    // Obtener la URL del archivo PDF generado
+  const pdfUrl = doc.output("bloburl");
+
+  // Abrir la URL en una nueva pestaña del navegador
+  window.open(pdfUrl, "_blank");
+
+  };
+
   return (
     <>
       <div className="mt-4">
         <h2>Lista de cuotas:</h2>
-        <table className="table">
+        <table id="tablaCuotas" className="table">
           <thead>
             <tr>
               <th>Número de Cuota</th>
@@ -108,6 +124,9 @@ const ListarCuotas = ({
             : null
         }
       />
+      <button className="btn btn-primary m-3 px-5" onClick={generarInformePDF}>
+        Generar Informe PDF
+      </button>
     </>
   );
 };
@@ -121,3 +140,4 @@ ListarCuotas.propTypes = {
 };
 
 export default ListarCuotas;
+
