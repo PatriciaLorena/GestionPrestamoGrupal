@@ -74,7 +74,10 @@ const VerPrestamos = () => {
       body: rows,
     });
 
-    doc.save("Informe_Prestamos.pdf");
+    const pdfUrl = doc.output("bloburl");
+    window.open(pdfUrl, "_blank");
+
+    //doc.save("Informe_Prestamos.pdf");
   };
 
   useEffect(() => {
@@ -94,12 +97,16 @@ const VerPrestamos = () => {
           <h1>Listado de prestamos</h1>
         </div>
         <div className="col-auto ms-auto">
+        <button className="btn btn-success btn-sm me-3" onClick={generarInformePDF}>
+        Generar Informe PDF
+      </button>
           <Link
             to={`/prestamo/create`}
             className="btn btn-primary btn-sm me-1 botonAdd estBtn"
           >
             Agregar nuevo prestamo
           </Link>
+
         </div>
       </div>
       <table className="table table-Light table-striped miborde">
@@ -152,9 +159,6 @@ const VerPrestamos = () => {
           ))}
         </tbody>
       </table>
-      <button className="btn btn-primary" onClick={generarInformePDF}>
-        Generar Informe PDF
-      </button>
     </>
   );
 };

@@ -15,6 +15,8 @@ const ListarCuotas = ({
   agregarNuevaCuota,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [clientes, setClientes] = useState([]);
+
 
   useEffect(() => {
     axios
@@ -49,21 +51,71 @@ const ListarCuotas = ({
 
   const generarInformePDF = () => {
     const doc = new jsPDF();
-    
-    doc.text("Informe de Cuotas", 10, 10);
-    doc.autoTable({ html: "#tablaCuotas" });
+
+    let y = 10;
+    let x = 10;
+
+  // Obtener el ancho del documento PDF
+  const pdfWidth = doc.internal.pageSize.getWidth();
+
+  // Calcular la posición X para centrar el texto
+  const titleWidth = doc.getStringUnitWidth('Informe de Cuotas') * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const titleX = (pdfWidth - titleWidth) / 2;
+
+  const totalWidth = doc.getStringUnitWidth(`Total a pagar: ${prestamoEnCreacion.monto}`) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const totalX = (pdfWidth - totalWidth);
+
+  const fechaPrestamoWidth = doc.getStringUnitWidth(`Fecha de Creación: ${formatDate(prestamoEnCreacion.createdAt)}`) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const fechaPrestamoX = (pdfWidth - fechaPrestamoWidth);
+
+  const montoPrestamoWidth = doc.getStringUnitWidth(`Monto: ${prestamoEnCreacion.monto}`) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+  const montoPrestamoX = ((pdfWidth - montoPrestamoWidth)/2)-20;
+
+  doc.setFontSize(20);
+
+  // Agregar título centrado en negrita
+  doc.setFont("bold");;
+
+    y += 5;
+
+    doc.text(`Informe de Cuotas`, titleX, y);
+
+    // Coordenada y inicial para el primer texto
+    y += 10;
+
+    doc.setFontSize(14);
+    doc.text(`Cliente: ${prestamoEnCreacion.cliente.name + ' ' + prestamoEnCreacion.cliente.lastName}`, 10, y);
+    console.log(prestamoEnCreacion.cliente.name);
+
+    doc.text(`Fecha de prestamo: ${formatDate(prestamoEnCreacion.createdAt)}`, fechaPrestamoX, y);
+
+    y += 7;
+
+    doc.text(`Cuotas: ${cuotasEnCreacion.length}`, 10, y);
+    x = 10;
+
+    doc.text(`Monto del prestamo: ${prestamoEnCreacion.monto}`, montoPrestamoX, y);
+
+    const totalAPagar = cuotasEnCreacion.reduce((total, cuota) => {
+      return total + parseFloat(cuota.montoCuota);
+    }, 0);
+  
+    doc.text(`Total a pagar: ${totalAPagar}`, totalX, y);
+
+    y += 7;
+    doc.autoTable({ html: "#tablaCuotas", startY: y });
+
     //doc.save("Informe_Cuotas.pdf");
-    // Obtener la URL del archivo PDF generado
-  const pdfUrl = doc.output("bloburl");
 
-  // Abrir la URL en una nueva pestaña del navegador
-  window.open(pdfUrl, "_blank");
+    const pdfUrl = doc.output("bloburl");
+    window.open(pdfUrl, "_blank");
+};
 
-  };
 
   return (
     <>
-      <div className="mt-4">
+    <div className="container">
+      <div className=" mt-4">
         <h2>Lista de cuotas:</h2>
         <table id="tablaCuotas" className="table">
           <thead>
@@ -127,7 +179,9 @@ const ListarCuotas = ({
       <button className="btn btn-primary m-3 px-5" onClick={generarInformePDF}>
         Generar Informe PDF
       </button>
+      </div>
     </>
+    
   );
 };
 
