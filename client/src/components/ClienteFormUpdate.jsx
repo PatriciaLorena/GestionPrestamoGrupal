@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import useForm from "../hooks/useForm";
 import { useNavigate } from "react-router-dom";
+import Menu from "./Menu";
 
 const ClienteFormUpdate = () => {
   const navegate = useNavigate();
@@ -68,95 +69,98 @@ const ClienteFormUpdate = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="row align-items-center">
-        <div className="col-auto">
-          <h1>Editar Cliente</h1>
+    <>
+      <Menu />
+      <form onSubmit={handleSubmit}>
+        <div className="row align-items-center">
+          <div className="col-auto">
+            <h1>Editar Cliente</h1>
+          </div>
+          <div className="col-auto ms-auto">
+            <Link
+              to={`/`}
+              className="btn btn-primary btn-sm me-1 botonAdd estBtn"
+            >
+              back to home
+            </Link>
+          </div>
+          <h3>Edit {clientes.name}</h3>
         </div>
-        <div className="col-auto ms-auto">
-          <Link
-            to={`/`}
-            className="btn btn-primary btn-sm me-1 botonAdd estBtn"
-          >
-            back to home
-          </Link>
+        <div className="text-danger">{error}</div>
+
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Nombres:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+          />
         </div>
-        <h3>Edit {clientes.name}</h3>
-      </div>
-      <div className="text-danger">{error}</div>
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Apellidos:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="lastName"
+            value={values.lastName}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Numero de Cedula:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="numCedula"
+            value={values.numCedula}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Telefono:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="telefono"
+            value={values.telefono}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Email:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="d-flex justify-content-between m-3">
+          <label className="mr-3">Direccion:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="direccion"
+            value={values.direccion}
+            onChange={handleChange}
+          />
+        </div>
 
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Nombres:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="name"
-          value={values.name}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Apellidos:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="lastName"
-          value={values.lastName}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Numero de Cedula:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="numCedula"
-          value={values.numCedula}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Telefono:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="telefono"
-          value={values.telefono}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Email:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="email"
-          value={values.email}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="d-flex justify-content-between m-3">
-        <label className="mr-3">Direccion:</label>
-        <input
-          type="text"
-          className="form-control"
-          name="direccion"
-          value={values.direccion}
-          onChange={handleChange}
-        />
-      </div>
-
-      <button type="submit" className="btn btn-primary mt-3">
-        Editar
-      </button>
-      <button
-        type="button"
-        className="btn btn-danger mt-3 ms-3"
-        onClick={() => navegate("/")}
-      >
-        Cancel
-      </button>
-    </form>
+        <button type="submit" className="btn btn-primary mt-3">
+          Editar
+        </button>
+        <button
+          type="button"
+          className="btn btn-danger mt-3 ms-3"
+          onClick={() => navegate("/")}
+        >
+          Cancel
+        </button>
+      </form>
+    </>
   );
 };
 

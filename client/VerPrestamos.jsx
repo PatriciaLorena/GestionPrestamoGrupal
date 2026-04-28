@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Menu from "./src/components/Menu";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 const VerPrestamos = () => {
   const [prestamos, setPrestamos] = useState([]);
@@ -42,6 +45,41 @@ const VerPrestamos = () => {
     });
   };
 
+  // Función para generar el informe PDF
+  const generarInformePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Informe de Préstamos", 10, 10);
+
+    const rows = [];
+    prestamos.forEach((prestamo) => {
+      const row = [
+        prestamo.cliente ? prestamo.cliente.name : "Sin nombre",
+        prestamo.cliente ? prestamo.cliente.lastName : "Sin apellido",
+        prestamo.monto,
+        prestamo.numCuotas,
+        prestamo.cuotas.length > 0
+          ? prestamo.cuotas[prestamo.cuotas.length - 1].fechaVencimiento
+          : "Sin fecha",
+        prestamo.cuotas.length > 0
+          ? prestamo.cuotas[prestamo.cuotas.length - 1].estado
+          : "Sin estado",
+      ];
+      rows.push(row);
+    });
+
+    doc.autoTable({
+      head: [
+        ["Nombre", "Apellido", "Monto", "Cuotas", "Fecha de vencimiento", "Estado"]
+      ],
+      body: rows,
+    });
+
+    const pdfUrl = doc.output("bloburl");
+    window.open(pdfUrl, "_blank");
+
+    //doc.save("Informe_Prestamos.pdf");
+  };
+
   useEffect(() => {
     axios
       .get("http://localhost:80/api/prestamo")
@@ -53,17 +91,22 @@ const VerPrestamos = () => {
 
   return (
     <>
+      <Menu />
       <div className="row align-items-center">
         <div className="col-auto">
           <h1>Listado de prestamos</h1>
         </div>
         <div className="col-auto ms-auto">
+        <button className="btn btn-success btn-sm me-3" onClick={generarInformePDF}>
+        Generar Informe PDF
+      </button>
           <Link
             to={`/prestamo/create`}
             className="btn btn-primary btn-sm me-1 botonAdd estBtn"
           >
             Agregar nuevo prestamo
           </Link>
+
         </div>
       </div>
       <table className="table table-Light table-striped miborde">
@@ -104,7 +147,7 @@ const VerPrestamos = () => {
                 >
                   Cobrar
                 </Link>
-                <button className="btn btn-success btn-sm me-1">Detalle</button>
+                <Link className="btn btn-success btn-sm me-1" to={`/prestamo/${prestamo._id}/cuotas`}>Detalle</Link>
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => deletePrestamo(prestamo._id)}
@@ -119,7 +162,5 @@ const VerPrestamos = () => {
     </>
   );
 };
-
-VerPrestamos.propTypes = {};
 
 export default VerPrestamos;

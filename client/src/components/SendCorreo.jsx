@@ -19,7 +19,7 @@ const SendCorreo = ({ fechaVencimiento }) => {
     }, fechaEnvio.getTime() - Date.now());
 
     return () => clearTimeout(timerId);
-  }, [fechaVencimiento]);
+  }, []);
 
   const enviarCorreo = async () => {
     try {

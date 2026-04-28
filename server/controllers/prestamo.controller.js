@@ -44,7 +44,7 @@ module.exports = {
         });
 
         const montoTotalConIntereses = monto * (1 + interes / 100);
-        const montoCuota = Math.round(montoTotalConIntereses / numCuotas); 
+        const montoCuota = Math.round(montoTotalConIntereses / numCuotas);
 
         function calcularFechaVencimiento(fechaPrestamo, numCuota) {
             const fecha = new Date(fechaPrestamo);
@@ -55,7 +55,7 @@ module.exports = {
         function calcularMora(fechaVencimiento) {
             const hoy = new Date();
             const diasMora = Math.max(0, Math.floor((hoy - fechaVencimiento) / (1000 * 60 * 60 * 24)));
-            const mora = diasMora * 3000; 
+            const mora = diasMora * 3000;
             return { diasMora, mora };
         }
 
@@ -104,4 +104,3 @@ module.exports = {
 
     updateCuota,
 };
-
