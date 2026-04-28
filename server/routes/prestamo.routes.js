@@ -8,6 +8,7 @@ const PrestamoRouter = express.Router();
 PrestamoRouter.post("/", authenticate, PrestamoController.createNewPrestamo);
 PrestamoRouter.get("/", authenticate, PrestamoController.getAllPrestamos);
 PrestamoRouter.get("/:id", authenticate, PrestamoController.getOnePrestamoById);
+PrestamoRouter.put('/:prestamoId/cuotas/:cuotaId/pagar', PrestamoController.updateCuota);
 PrestamoRouter.put(
   "/:id",
   authenticate,

@@ -1,5 +1,26 @@
 const { PrestamoModel } = require("../models/prestamo.model");
 
+const updateCuota = async (req, res) => {
+    const { prestamoId, cuotaId } = req.params;
+
+    try {
+        const prestamo = await PrestamoModel.findOneAndUpdate(
+            { _id: prestamoId, 'cuotas.numCuotas': parseInt(cuotaId) },
+            { $set: { 'cuotas.$.estado': 'pagado' } },
+            { new: true }
+        );
+
+        if (!prestamo) {
+            return res.status(404).json({ message: 'Préstamo o cuota no encontrada' });
+        }
+
+        return res.status(200).json({ prestamo });
+    } catch (error) {
+        console.error('Error al actualizar el estado de la cuota:', error);
+        return res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     getAllPrestamos: (req, res) => {
         PrestamoModel.find({})
@@ -80,5 +101,7 @@ module.exports = {
                 res.status(400).json({ message: "something went wrong", error: err })
             );
     },
+
+    updateCuota,
 };
 

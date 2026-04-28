@@ -14,18 +14,17 @@ const ModificarPrestamo = () => {
   const [cliente, setCliente] = useState(null);
   const [error, setError] = useState(null);
   const [fechaPrestamo, setFechaPrestamo] = useState(new Date());
-  const operacion = 1;
+  const [operacion, setOperacion] = useState(1);
 
   useEffect(() => {
+    // Carga el préstamo actual y el cliente
     axios
       .get(`http://localhost:80/api/prestamo/${id}`)
       .then((response) => {
         setPrestamo(response.data.prestamo);
         setLoading(false);
         axios
-          .get(
-            `http://localhost:80/api/cliente/${response.data.prestamo.cliente}`
-          )
+          .get(`http://localhost:80/api/cliente/${response.data.prestamo.cliente}`)
           .then((clienteResponse) => {
             setCliente(clienteResponse.data.cliente);
           })
@@ -38,25 +37,26 @@ const ModificarPrestamo = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPrestamo((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+    // Calcula el próximo número de operación contando todas las cuotas pagadas
+    axios
+      .get(`http://localhost:80/api/prestamo`)
+      .then((response) => {
+        const todosPrestamos = response.data.prestamos;
+        const totalPagadas = todosPrestamos.reduce((acc, p) => {
+          const pagadas = p.cuotas.filter((c) => c.estado === "pagado").length;
+          return acc + pagadas;
+        }, 0);
+        setOperacion(totalPagadas + 1);
+      })
+      .catch((err) => console.error("Error al calcular número de operación:", err));
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const updatedPrestamo = { ...prestamo, fechaPrestamo };
-      const response = await axios.put(
-        `http://localhost:80/api/prestamo/${id}`,
-        updatedPrestamo
-      );
-      console.log(response.data);
+      await axios.put(`http://localhost:80/api/prestamo/${id}`, updatedPrestamo);
       Swal.fire({
         icon: "success",
         title: "¡Éxito!",
@@ -64,7 +64,6 @@ const ModificarPrestamo = () => {
       });
     } catch (error) {
       console.error(error);
-      setError(error.message);
       Swal.fire({
         icon: "error",
         title: "¡Error!",
@@ -74,17 +73,11 @@ const ModificarPrestamo = () => {
   };
 
   const agregarNuevaCuota = (nuevaCuota) => {
-    // Aquí puedes agregar la lógica para guardar la nueva cuota en el estado del préstamo
     console.log("Nueva cuota:", nuevaCuota);
   };
 
-  if (loading) {
-    return <h1>Cargando...</h1>;
-  }
-
-  if (error) {
-    return <h1>{error}</h1>;
-  }
+  if (loading) return <h1>Cargando...</h1>;
+  if (error) return <h1>{error}</h1>;
 
   return (
     <div>
@@ -95,10 +88,7 @@ const ModificarPrestamo = () => {
             <h1>Cobrar Préstamo</h1>
           </div>
           <div className="col-auto ms-auto">
-            <Link
-              to="/"
-              className="btn btn-primary btn-sm me-1 botonAdd estBtn"
-            >
+            <Link to="/" className="btn btn-primary btn-sm me-1 botonAdd estBtn">
               Volver al inicio
             </Link>
           </div>
@@ -115,7 +105,7 @@ const ModificarPrestamo = () => {
             />
           </div>
           <div className="col-auto">
-            <label htmlFor="numCuotas">Cobrador: </label>
+            <label htmlFor="cobrador">Cobrador: </label>
             <select id="cobrador" name="cobrador">
               <option value="">Selecciona un cobrador</option>
               <option value="1">Hector Cardozo</option>
@@ -125,8 +115,14 @@ const ModificarPrestamo = () => {
         </div>
         <div className="row align-items-center mt-3">
           <div className="col-auto">
-            <label htmlFor="monto">Numero de operacion: </label>
-            <input type="number" id="monto" name="monto" value={operacion} />
+            <label htmlFor="operacion">Numero de operacion: </label>
+            <input
+              type="number"
+              id="operacion"
+              name="operacion"
+              value={operacion}
+              disabled
+            />
           </div>
           <div className="col-auto">
             <label htmlFor="fechaPrestamo">Fecha de pago: </label>

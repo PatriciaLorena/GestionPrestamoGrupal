@@ -37,6 +37,17 @@ const ListarCuotas = ({
   );
   const cuotasEnCreacion = prestamoEnCreacion ? prestamoEnCreacion.cuotas : [];
 
+const calcularMoraActual = (cuota) => {
+  if (cuota.estado === "pagado") {
+    return { diasMora: cuota.diasMora, mora: cuota.mora };
+  }
+  const hoy = new Date();
+  const fechaVencimiento = new Date(cuota.fechaVencimiento);
+  const diasMora = Math.max(0, Math.floor((hoy - fechaVencimiento) / (1000 * 60 * 60 * 24)));
+  const mora = diasMora * 3000;
+  return { diasMora, mora };
+};
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -61,16 +72,19 @@ const ListarCuotas = ({
             </tr>
           </thead>
           <tbody>
-            {cuotasEnCreacion.map((cuota, index) => (
-              <tr key={index}>
-                <td>{cuota.numCuotas}</td>
-                <td>{formatDate(cuota.fechaVencimiento)}</td>
-                <td>{cuota.montoCuota}</td>
-                <td>{cuota.mora}</td>
-                <td>{cuota.diasMora}</td>
-                <td>{cuota.estado}</td>
-              </tr>
-            ))}
+            {cuotasEnCreacion.map((cuota, index) => {
+  const { diasMora, mora } = calcularMoraActual(cuota);
+  return (
+    <tr key={index}>
+      <td>{cuota.numCuotas}</td>
+      <td>{formatDate(cuota.fechaVencimiento)}</td>
+      <td>{cuota.montoCuota}</td>
+      <td>{mora}</td>
+      <td style={{ color: diasMora > 0 ? "red" : "blue" }}>{diasMora}</td>
+      <td>{cuota.estado}</td>
+    </tr>
+  );
+})}
           </tbody>
         </table>
 
