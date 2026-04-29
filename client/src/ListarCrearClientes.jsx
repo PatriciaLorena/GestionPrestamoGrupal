@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import Menu from "./components/Menu";
 
 function ListarCrearClientes() {
   const navigate = useNavigate();
@@ -36,7 +35,6 @@ function ListarCrearClientes() {
   };
   return (
     <>
-      <Menu />
       <div className="row">
         <div className="row align-items-center">
           <div className="col-auto">

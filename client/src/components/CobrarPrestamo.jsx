@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
 import ListarCuotas from "./ListarCuotas";
-import Menu from "./Menu";
 
 const ModificarPrestamo = () => {
   const { id } = useParams();
@@ -82,7 +81,6 @@ const ModificarPrestamo = () => {
 
   return (
     <div>
-      <Menu />
       <form onSubmit={handleSubmit}>
         <div className="text-danger">{error}</div>
         <div className="row align-items-center">

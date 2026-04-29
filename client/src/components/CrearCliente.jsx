@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import "../App.css";
-import Menu from "./Menu";
 
 const ClienteForm = () => {
   const navegate = useNavigate();
@@ -47,7 +46,6 @@ const ClienteForm = () => {
 
   return (
     <>
-      <Menu />
       <form onSubmit={handleSubmit}>
         <div className="row align-items-center">
           <div className="col-auto">

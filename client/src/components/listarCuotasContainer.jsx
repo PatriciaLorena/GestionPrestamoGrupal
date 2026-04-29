@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import ListarCuotas from "./ListarCuotas";
 import { useState } from "react";
-import Menu from "./Menu";
 
 const ListarCuotasContainer = () => {
   const { id } = useParams();
@@ -12,7 +11,6 @@ const ListarCuotasContainer = () => {
 
   return (
     <>
-      <Menu />
       <ListarCuotas
         prestamos={prestamos}
         setPrestamos={setPrestamos}

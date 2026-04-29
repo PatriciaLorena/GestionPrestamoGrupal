@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import useForm from "../hooks/useForm";
 import { useNavigate } from "react-router-dom";
-import Menu from "./Menu";
 
 const ClienteFormUpdate = () => {
   const navegate = useNavigate();
@@ -70,7 +69,6 @@ const ClienteFormUpdate = () => {
 
   return (
     <>
-      <Menu />
       <form onSubmit={handleSubmit}>
         <div className="row align-items-center">
           <div className="col-auto">

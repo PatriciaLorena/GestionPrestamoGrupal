@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CrearPrestamo from "./components/CrearPrestamo";
 import ListarCuotas from "./components/ListarCuotas";
-import Menu from "./components/Menu";
 
 function ListarCrearPrestamo() {
   const [prestamos, setPrestamos] = useState([]);
@@ -17,7 +16,6 @@ function ListarCrearPrestamo() {
 
   return (
     <>
-      <Menu />
       <div className="row">
         <CrearPrestamo updateCuotas={updateCuotas} />
         <ListarCuotas
